@@ -1,0 +1,1 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><ns2:GetStatusResponse xmlns:ns2="http://www.example.org/metrobank/"><out>fail</out></ns2:GetStatusResponse></soap:Body></soap:Envelope>

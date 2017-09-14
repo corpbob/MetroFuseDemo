@@ -4,10 +4,22 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
     <!-- Define a traditional camel context here -->
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
-        <route id="simple-route">
+        <route id="simple-route" streamCache="true">
             <from id="_to2" uri="file:messages"/>
             <to id="_to1" uri="cxf://http://localhost:8080/jaxws-cxf-helloworld-1.0/codenotfound/services/metrobank?dataFormat=MESSAGE&amp;portName={http://www.example.org/metrobank/}metrobankSOAP&amp;serviceName={http://www.example.org/metrobank/}metrobank"/>
-            <log id="_log1" loggingLevel="DEBUG" message="&amp;gt;&amp;gt;&amp;gt; ${body}"/>
+            <log id="_log1" loggingLevel="INFO" message="&amp;gt;&amp;gt;&amp;gt; ${body}"/>         
+            <choice id="_choice1">
+                <when id="_when1">
+                    <!-- 
+                    <simple>${body} == 'success'</simple>
+                     -->
+                     <xpath>//out = 'success'</xpath>
+                    <to id="_to3" uri="file:success?fileName=success-${date:now:yyMMddHHmmssZ}.txt"/>
+                </when>
+                <otherwise id="_otherwise1">
+                    <to id="_to4" uri="file:fail?fileName=fail-${date:now:yyMMddHHmmssZ}.txt"/>
+                </otherwise>
+            </choice>
         </route>
     </camelContext>
 </beans>

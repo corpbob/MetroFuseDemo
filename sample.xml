@@ -1,0 +1,8 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:met="http://www.example.org/metrobank/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <met:GetStatus>
+         <in>test</in>
+      </met:GetStatus>
+   </soapenv:Body>
+</soapenv:Envelope>
