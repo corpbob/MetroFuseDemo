@@ -1,0 +1,130 @@
+{
+  "apiVersion" : "v1",
+  "kind" : "List",
+  "items" : [ {
+    "apiVersion" : "v1",
+    "kind" : "Service",
+    "metadata" : {
+      "annotations" : {
+        "fabric8.io/iconUrl" : "img/icons/camel.svg"
+      },
+      "labels" : {
+        "expose" : "true",
+        "provider" : "fabric8",
+        "project" : "MetroFuseDemo",
+        "version" : "1.0-SNAPSHOT",
+        "group" : "com.metro.fuse"
+      },
+      "name" : "metrofusedemo"
+    },
+    "spec" : {
+      "ports" : [ {
+        "name" : "http",
+        "port" : 80,
+        "protocol" : "TCP",
+        "targetPort" : 8080
+      } ],
+      "selector" : {
+        "project" : "MetroFuseDemo",
+        "provider" : "fabric8",
+        "group" : "com.metro.fuse"
+      }
+    }
+  }, {
+    "apiVersion" : "extensions/v1beta1",
+    "kind" : "Deployment",
+    "metadata" : {
+      "annotations" : {
+        "fabric8.io/iconUrl" : "img/icons/camel.svg",
+        "fabric8.io/metrics-path" : "dashboard/file/camel-routes.json/?var-project=MetroFuseDemo&var-version=1.0-SNAPSHOT"
+      },
+      "labels" : {
+        "provider" : "fabric8",
+        "project" : "MetroFuseDemo",
+        "version" : "1.0-SNAPSHOT",
+        "group" : "com.metro.fuse"
+      },
+      "name" : "metrofusedemo"
+    },
+    "spec" : {
+      "replicas" : 1,
+      "selector" : {
+        "matchLabels" : {
+          "project" : "MetroFuseDemo",
+          "provider" : "fabric8",
+          "group" : "com.metro.fuse"
+        }
+      },
+      "template" : {
+        "metadata" : {
+          "annotations" : {
+            "fabric8.io/iconUrl" : "img/icons/camel.svg",
+            "fabric8.io/metrics-path" : "dashboard/file/camel-routes.json/?var-project=MetroFuseDemo&var-version=1.0-SNAPSHOT"
+          },
+          "labels" : {
+            "provider" : "fabric8",
+            "project" : "MetroFuseDemo",
+            "version" : "1.0-SNAPSHOT",
+            "group" : "com.metro.fuse"
+          }
+        },
+        "spec" : {
+          "containers" : [ {
+            "env" : [ {
+              "name" : "KUBERNETES_NAMESPACE",
+              "valueFrom" : {
+                "fieldRef" : {
+                  "fieldPath" : "metadata.namespace"
+                }
+              }
+            }, {
+              "name" : "JAVA_APP_DIR",
+              "value" : "/deployments"
+            } ],
+            "image" : "metrofusedemo:latest",
+            "imagePullPolicy" : "Always",
+            "livenessProbe" : {
+              "httpGet" : {
+                "path" : "/health",
+                "port" : 8081
+              },
+              "initialDelaySeconds" : 180
+            },
+            "name" : "spring-boot",
+            "ports" : [ {
+              "containerPort" : 8080,
+              "name" : "http",
+              "protocol" : "TCP"
+            }, {
+              "containerPort" : 9779,
+              "name" : "prometheus",
+              "protocol" : "TCP"
+            }, {
+              "containerPort" : 8778,
+              "name" : "jolokia",
+              "protocol" : "TCP"
+            } ],
+            "readinessProbe" : {
+              "httpGet" : {
+                "path" : "/health",
+                "port" : 8081
+              },
+              "initialDelaySeconds" : 10
+            },
+            "resources" : {
+              "limits" : {
+                "cpu" : "1.0"
+              },
+              "requests" : {
+                "cpu" : "0.2"
+              }
+            },
+            "securityContext" : {
+              "privileged" : false
+            }
+          } ]
+        }
+      }
+    }
+  } ]
+}

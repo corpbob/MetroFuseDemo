@@ -1,0 +1,15 @@
+---
+apiVersion: "v1"
+kind: "List"
+items:
+- apiVersion: "v1"
+  kind: "ImageStream"
+  metadata:
+    name: "metrofusedemo"
+  spec:
+    tags:
+    - from:
+        kind: "ImageStreamImage"
+        name: "metrofusedemo@sha256:5367bac7b9c771f5e1d18bf0f0af4d1ab58b86cf4091b05a8a1a31a3c32500b4"
+        namespace: "fusedemo"
+      name: "latest"
